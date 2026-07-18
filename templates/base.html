@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ meta_title or site_name }}</title>
+    <meta name="description" content="{{ meta_description or site_description }}">
+    <meta name="keywords" content="{{ meta_keywords or 'reseñas de libros, recomendaciones de libros, qué libro leer, book reviews, libros en español, novela contemporánea, ficción literaria, bookstagram, bookaholic mexicana, club de lectura, mejores libros, libros recomendados, Goodreads, reseñas literarias, libros para leer, lectura, literatura, novela romántica, fantasía, thriller, libros México' }}">
+    <meta name="author" content="Bookaholic Mexicana">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="{{ canonical_url or (site_url + (request.url.path if request else '')) }}">
+
+    <!-- Google Search Console -->
+    <meta name="google-site-verification" content="0JZH9K8UH9T7_lo41NYn_7Qel7y2BCbgqGpfWST_Hqc">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RRN000D5L7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RRN000D5L7');
+    </script>
+
+    <!-- Idioma alternativo -->
+    <link rel="alternate" hreflang="es" href="{{ site_url }}{{ request.url.path if request else '' }}">
+    <link rel="alternate" hreflang="x-default" href="{{ site_url }}{{ request.url.path if request else '' }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ meta_title or site_name }}">
+    <meta property="og:description" content="{{ meta_description or site_description }}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ site_url }}{{ request.url.path if request else '' }}">
+    <meta property="og:site_name" content="{{ site_name }}">
+    <meta property="og:locale" content="es_MX">
+    {% if meta_image %}<meta property="og:image" content="{{ meta_image }}">
+    <meta property="og:image:alt" content="{{ meta_title or site_name }}">{% endif %}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ meta_title or site_name }}">
+    <meta name="twitter:description" content="{{ meta_description or site_description }}">
+    {% if meta_image %}<meta name="twitter:image" content="{{ meta_image }}">{% endif %}
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="{{ site_name }}" href="{{ site_url }}/feed.xml">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Schema.org Website -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{ site_name }}",
+        "alternateName": ["Bookaholic Mexicana", "Book Reviews en Español", "Reseñas de Libros México"],
+        "url": "{{ site_url }}",
+        "description": "{{ site_description }}",
+        "inLanguage": "es-MX",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ site_url }}/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <!-- Schema.org Organization -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "{{ site_name }}",
+        "url": "{{ site_url }}",
+        "logo": "{{ site_url }}/logo.png",
+        "sameAs": [
+            "https://www.instagram.com/bookaholicmexicana/",
+            "https://www.goodreads.com/user/show/168893635",
+            "https://www.amazon.com.mx/shop/bookaholicmexicana",
+            "https://bookaholicmexicana.substack.com",
+            "https://www.pinterest.com/bookaholicmexicana/",
+            "https://fable.co/fabler/bookaholic-mexicana-244062493156"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "bookaholicmexicana@gmail.com",
+            "contactType": "customer service"
+        }
+    }
+    </script>
+
+    {% block schema_extra %}{% endblock %}
+    {% block head_extra %}{% endblock %}
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg: #fdf6f0;
+            --bg-warm: #faf0e6;
+            --text: #3d2c2c;
+            --text-soft: #5a4545;
+            --accent: #c97b5d;
+            --accent-hover: #b56a4e;
+            --accent-light: #e8c4b0;
+            --accent-pale: #f5e6dc;
+            --rose: #d4a0a0;
+            --rose-light: #f0d5d5;
+            --rose-pale: #faf0ef;
+            --blush: #f2c6c2;
+            --sage: #a8b5a0;
+            --sage-light: #d4ddd0;
+            --cream: #fff8f0;
+            --card-bg: #ffffff;
+            --border: #eeddd4;
+            --border-soft: #f5e8e0;
+            --muted: #9a8080;
+            --gold: #d4a853;
+            --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-serif);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
+            font-size: 18px;
+        }
+
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--accent-hover); }
+
+        /* ── Header ──────────────────────────────── */
+        .site-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-soft);
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .site-logo {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .site-logo .logo-dot { color: var(--accent); }
+
+        nav { display: flex; align-items: center; gap: 0.3rem; }
+        nav a {
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--muted);
+            padding: 0.4rem 0.7rem;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        nav a:hover {
+            color: var(--accent);
+            background: var(--accent-pale);
+            text-decoration: none;
+        }
+        nav a.nav-highlight {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* ── Main ────────────────────────────────── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* ── Post grid ───────────────────────────── */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .post-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-soft);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(180, 120, 100, 0.12);
+        }
+
+        .post-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .post-card-body {
+            padding: 1.2rem 1.5rem 1.5rem;
+        }
+
+        .post-card-meta {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .post-card-title {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            font-weight: 600;
+            line-height: 1.35;
+            margin-bottom: 0.4rem;
+        }
+        .post-card-title a { color: var(--text); }
+        .post-card-title a:hover { color: var(--accent); text-decoration: none; }
+
+        .post-card-excerpt {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.55;
+            font-weight: 400;
+        }
+
+        .genre-tag {
+            display: inline-block;
+            background: var(--accent-pale);
+            color: var(--accent);
+            font-family: var(--font-sans);
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .genre-tag:hover { background: var(--accent); color: white; text-decoration: none; }
+
+        .stars { color: var(--gold); font-size: 0.95rem; letter-spacing: 1px; }
+
+        /* ── Pagination ──────────────────────────── */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.4rem;
+            margin-top: 3rem;
+            font-family: var(--font-sans);
+        }
+        .pagination a, .pagination span {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .pagination a:hover {
+            background: var(--accent-pale);
+            border-color: var(--accent-light);
+            text-decoration: none;
+        }
+        .pagination .current {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* ── Single post ─────────────────────────── */
+        .post-single { max-width: 750px; margin: 0 auto; }
+
+        .post-single h1 {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .post-single .meta {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        .post-single .featured-img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+
+        .post-body p { margin-bottom: 1.2rem; }
+
+        .amazon-cta {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent) 0%, #d4886a 100%);
+            color: white;
+            font-family: var(--font-sans);
+            font-weight: 700;
+            padding: 0.85rem 2.2rem;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            margin: 1.5rem 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            letter-spacing: 0.02em;
+        }
+        .amazon-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(201, 123, 93, 0.35);
+            text-decoration: none;
+            color: white;
+        }
+
+        /* ── Newsletter / Substack CTA ───────────── */
+        .newsletter-bar {
+            background: linear-gradient(135deg, var(--rose) 0%, var(--accent) 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            margin: 2rem 0;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .newsletter-bar::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 150px; height: 150px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+        }
+        .newsletter-bar h3 {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+        .newsletter-bar p {
+            font-size: 0.88rem;
+            opacity: 0.92;
+            margin-bottom: 1rem;
+            font-family: var(--font-sans);
+            font-weight: 400;
+        }
+        .btn-newsletter {
+            display: inline-block;
+            background: white;
+            color: var(--accent);
+            font-family: var(--font-sans);
+            font-weight: 700;
+            padding: 0.65rem 2rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-newsletter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: var(--accent);
+        }
+
+        .ig-link {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        /* ── Genres bar ──────────────────────────── */
+        .genres-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid var(--border-soft);
+        }
+        .genres-bar a {
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.35rem 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            color: var(--muted);
+            transition: all 0.25s;
+        }
+        .genres-bar a:hover, .genres-bar a.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* ── Footer ──────────────────────────────── */
+        .site-footer {
+            background: var(--cream);
+            border-top: 1px solid var(--border-soft);
+            padding: 2.5rem 0 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+        .site-footer a { color: var(--accent); }
+        .site-footer a:hover { color: var(--accent-hover); }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--text-soft);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--accent); text-decoration: none; }
+
+        .footer-seo { font-size: 0.75rem; color: var(--muted); margin-top: 1rem; line-height: 1.8; }
+        .footer-seo a { color: var(--muted); }
+
+        /* ── About / Collab pages ────────────────── */
+        .page-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .page-content h1 {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .page-content h2 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 0.8rem;
+            color: var(--accent);
+        }
+        .page-content p { margin-bottom: 1.2rem; }
+
+        /* ── Breadcrumbs ─────────────────────────── */
+        .breadcrumbs {
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+        .breadcrumbs a { color: var(--muted); }
+        .breadcrumbs a:hover { color: var(--accent); }
+
+        /* ── Decorative divider ──────────────────── */
+        .divider-floral {
+            text-align: center;
+            margin: 2rem 0;
+            color: var(--accent-light);
+            font-size: 1.2rem;
+            letter-spacing: 0.5rem;
+        }
+
+        /* ── Responsive ──────────────────────────── */
+        @media (max-width: 600px) {
+            .posts-grid { grid-template-columns: 1fr; }
+            .post-single h1 { font-size: 1.6rem; }
+            .header-inner { flex-direction: column; gap: 0.6rem; }
+            nav { gap: 0.1rem; }
+            nav a { padding: 0.3rem 0.5rem; font-size: 0.78rem; }
+            .footer-links { gap: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="/" class="site-logo">
+                <svg width="30" height="30" viewBox="0 0 100 100">
+                    <rect width="100" height="100" rx="14" fill="#c97b5d"/>
+                    <rect x="12" y="8" width="76" height="68" rx="10" fill="none" stroke="white" stroke-width="3"/>
+                    <polygon points="35,76 45,76 38,90" fill="none" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+                    <text x="50" y="58" text-anchor="middle" font-family="'Cormorant Garamond',Georgia,serif" font-size="48" font-weight="bold" fill="white">B.</text>
+                </svg>
+                Bookaholic <span class="logo-dot">Mexicana</span>
+            </a>
+            <nav>
+                <a href="/">Inicio</a>
+                <a href="/sobre-mi">Sobre m&iacute;</a>
+                <a href="/colaboraciones">Colaboraciones</a>
+                <a href="https://instagram.com/{{ ig_handle }}" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://bookaholicmexicana.substack.com" target="_blank" rel="noopener" class="nav-highlight">Substack</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Substack CTA -->
+    <div class="container">
+        <div class="newsletter-bar">
+            <h3>Recibe recomendaciones de libros en tu email</h3>
+            <p>Rese&ntilde;as, listas de lectura y novedades literarias. Sin spam, solo libros.</p>
+            <a href="https://bookaholicmexicana.substack.com" target="_blank" rel="noopener" class="btn-newsletter">
+                Suscribirme gratis
+            </a>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://instagram.com/{{ ig_handle }}" target="_blank" rel="noopener">@{{ ig_handle }}</a>
+                <a href="https://www.goodreads.com/user/show/168893635" target="_blank" rel="noopener">Goodreads</a>
+                <a href="https://bookaholicmexicana.substack.com" target="_blank" rel="noopener">Substack</a>
+                <a href="https://www.pinterest.com/bookaholicmexicana/" target="_blank" rel="noopener">Pinterest</a>
+                <a href="https://fable.co/fabler/bookaholic-mexicana-244062493156" target="_blank" rel="noopener">Fable</a>
+                <a href="https://www.amazon.com.mx/shop/bookaholicmexicana" target="_blank" rel="noopener">Amazon</a>
+                <a href="/feed.xml">RSS</a>
+            </div>
+            <p>&copy; {{ current_year }} {{ site_name }}</p>
+            <p style="margin-top: 0.5rem; font-size: 0.72rem;">
+                Algunos enlaces son de afiliado. Si compras a trav&eacute;s de ellos, recibo una peque&ntilde;a comisi&oacute;n sin costo extra para ti.
+            </p>
+            <div class="footer-seo">
+                <p><a href="/">Rese&ntilde;as de libros</a> &middot; <a href="/">Recomendaciones literarias</a> &middot; <a href="/">Qu&eacute; libro leer</a> &middot; <a href="/">Book reviews en espa&ntilde;ol</a> &middot; <a href="/">Novela contempor&aacute;nea</a> &middot; <a href="/">Ficci&oacute;n literaria</a> &middot; <a href="/">Libros recomendados M&eacute;xico</a></p>
+            </div>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

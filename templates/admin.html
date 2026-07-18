@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+{% block title %}Admin — {{ site_name }}{% endblock %}
+
+{% block content %}
+<style>
+    .admin-container { max-width: 700px; margin: 0 auto; padding: 1rem; }
+    .admin-header { text-align: center; margin-bottom: 2rem; }
+    .admin-header h1 { font-size: 1.5rem; color: #8b4513; }
+    .admin-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .admin-tab { padding: 0.6rem 1.2rem; border: 2px solid #8b4513; background: white;
+                 color: #8b4513; border-radius: 25px; cursor: pointer; font-size: 0.9rem;
+                 font-weight: 600; transition: all 0.2s; }
+    .admin-tab.active { background: #8b4513; color: white; }
+    .admin-form { background: #faf8f5; border-radius: 12px; padding: 1.5rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-weight: 600; color: #5a3a1a; margin-bottom: 0.3rem;
+                        font-size: 0.9rem; }
+    .form-group input, .form-group textarea, .form-group select {
+        width: 100%; padding: 0.7rem; border: 1px solid #d4c5b0; border-radius: 8px;
+        font-size: 1rem; font-family: inherit; background: white;
+        box-sizing: border-box; }
+    .form-group textarea { min-height: 150px; resize: vertical; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+        outline: none; border-color: #8b4513; box-shadow: 0 0 0 2px rgba(139,69,19,0.15); }
+    .form-row { display: flex; gap: 1rem; }
+    .form-row .form-group { flex: 1; }
+    .btn-submit { width: 100%; padding: 0.9rem; background: #8b4513; color: white;
+                  border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600;
+                  cursor: pointer; transition: background 0.2s; }
+    .btn-submit:hover { background: #6d350f; }
+    .btn-submit:disabled { background: #b89a7a; cursor: not-allowed; }
+    .stars-input { display: flex; gap: 0.3rem; font-size: 1.8rem; cursor: pointer; }
+    .stars-input span { color: #d4c5b0; transition: color 0.15s; }
+    .stars-input span.active { color: #f4a100; }
+    .alert { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-weight: 500; }
+    .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .post-list { list-style: none; padding: 0; }
+    .post-item { display: flex; align-items: center; gap: 1rem; padding: 0.8rem;
+                 background: white; border-radius: 8px; margin-bottom: 0.5rem;
+                 border: 1px solid #e8e0d6; }
+    .post-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
+    .post-item-info { flex: 1; }
+    .post-item-title { font-weight: 600; color: #5a3a1a; font-size: 0.9rem; }
+    .post-item-meta { font-size: 0.8rem; color: #8a7a6a; }
+    .post-item-actions { display: flex; gap: 0.5rem; }
+    .btn-small { padding: 0.3rem 0.6rem; border-radius: 6px; border: 1px solid #d4c5b0;
+                 background: white; cursor: pointer; font-size: 0.8rem; }
+    .btn-danger { color: #dc3545; border-color: #dc3545; }
+    .import-zone { border: 2px dashed #d4c5b0; border-radius: 12px; padding: 2rem;
+                   text-align: center; cursor: pointer; transition: border-color 0.2s; }
+    .import-zone:hover { border-color: #8b4513; }
+    .import-zone p { color: #8a7a6a; margin: 0.5rem 0; }
+    .hidden { display: none; }
+    @media (max-width: 600px) {
+        .form-row { flex-direction: column; gap: 0; }
+        .admin-container { padding: 0.5rem; }
+        .admin-form { padding: 1rem; }
+    }
+</style>
+
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>Panel Admin</h1>
+    </div>
+
+    <div class="admin-tabs">
+        <button class="admin-tab active" onclick="showTab('nueva')">Nueva Reseña</button>
+        <button class="admin-tab" onclick="showTab('posts')">Mis Reseñas</button>
+        <button class="admin-tab" onclick="showTab('import')">Importar IG</button>
+    </div>
+
+    <div id="alert-box"></div>
+
+    <!-- TAB: Nueva reseña -->
+    <div id="tab-nueva" class="admin-form">
+        <form id="form-resena" onsubmit="submitResena(event)">
+            <div class="form-group">
+                <label>Título del libro *</label>
+                <input type="text" id="book_title" placeholder="Ej: Cien años de soledad" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Autor(a) *</label>
+                    <input type="text" id="book_author" placeholder="Ej: Gabriel García Márquez" required>
+                </div>
+                <div class="form-group">
+                    <label>Género</label>
+                    <select id="genre">
+                        <option value="">Seleccionar...</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Fantasía">Fantasía</option>
+                        <option value="Thriller">Thriller</option>
+                        <option value="Misterio">Misterio</option>
+                        <option value="Ciencia Ficción">Ciencia Ficción</option>
+                        <option value="Terror">Terror</option>
+                        <option value="Contemporáneo">Contemporáneo</option>
+                        <option value="Histórico">Histórico</option>
+                        <option value="Young Adult">Young Adult</option>
+                        <option value="No Ficción">No Ficción</option>
+                        <option value="Poesía">Poesía</option>
+                        <option value="Clásico">Clásico</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Calificación</label>
+                <div class="stars-input" id="stars-input">
+                    <span onclick="setRating(1)">★</span>
+                    <span onclick="setRating(2)">★</span>
+                    <span onclick="setRating(3)">★</span>
+                    <span onclick="setRating(4)">★</span>
+                    <span onclick="setRating(5)">★</span>
+                </div>
+                <input type="hidden" id="rating" value="">
+            </div>
+            <div class="form-group">
+                <label>Reseña / Caption *</label>
+                <textarea id="caption" placeholder="Pega aquí tu caption de Instagram o escribe tu reseña..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label>URL de imagen</label>
+                <input type="url" id="image_url" placeholder="https://... (pega el link de la foto)">
+                <small style="color:#8a7a6a;">Tip: abre tu post en Instagram web, click derecho en la foto → Copiar dirección de imagen</small>
+            </div>
+            <div class="form-group">
+                <label>Link de Amazon (opcional)</label>
+                <input type="url" id="amazon_url" placeholder="https://amazon.com.mx/...">
+                <small style="color:#8a7a6a;">Si lo dejas vacío, se genera automáticamente con tu tag de afiliado</small>
+            </div>
+            <div class="form-group">
+                <label>Link al post de Instagram (opcional)</label>
+                <input type="url" id="ig_permalink" placeholder="https://www.instagram.com/p/...">
+            </div>
+            <button type="submit" class="btn-submit" id="btn-submit">Publicar Reseña</button>
+        </form>
+    </div>
+
+    <!-- TAB: Mis reseñas -->
+    <div id="tab-posts" class="admin-form hidden">
+        <ul class="post-list" id="post-list">
+            <li style="text-align:center;color:#8a7a6a;padding:2rem;">Cargando...</li>
+        </ul>
+    </div>
+
+    <!-- TAB: Importar IG -->
+    <div id="tab-import" class="admin-form hidden">
+        <div class="import-zone" onclick="document.getElementById('ig-file').click()">
+            <p style="font-size:2rem;">📦</p>
+            <p><strong>Importar datos de Instagram</strong></p>
+            <p>Sube el archivo JSON de tu exportación de Instagram</p>
+            <p style="font-size:0.8rem;">(Instagram → Settings → Your activity → Download your information → Posts → JSON)</p>
+            <input type="file" id="ig-file" accept=".json,.zip" style="display:none" onchange="handleIGImport(event)">
+        </div>
+        <div id="import-progress" class="hidden" style="margin-top:1rem;text-align:center;">
+            <p id="import-status">Procesando...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+const ADMIN_SECRET = '{{ admin_secret }}';
+const API_BASE = '';
+let currentRating = 0;
+
+function showTab(tab) {
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.admin-form').forEach(f => f.classList.add('hidden'));
+    event.target.classList.add('active');
+    document.getElementById('tab-' + tab).classList.remove('hidden');
+    if (tab === 'posts') loadPosts();
+}
+
+function setRating(n) {
+    currentRating = n;
+    document.getElementById('rating').value = n;
+    document.querySelectorAll('#stars-input span').forEach((s, i) => {
+        s.classList.toggle('active', i < n);
+    });
+}
+
+function showAlert(msg, type) {
+    const box = document.getElementById('alert-box');
+    box.innerHTML = '<div class="alert alert-' + type + '">' + msg + '</div>';
+    setTimeout(() => box.innerHTML = '', 5000);
+}
+
+async function submitResena(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Publicando...';
+
+    const data = {
+        book_title: document.getElementById('book_title').value.trim(),
+        book_author: document.getElementById('book_author').value.trim(),
+        genre: document.getElementById('genre').value,
+        rating: currentRating || null,
+        caption: document.getElementById('caption').value.trim(),
+        image_url: document.getElementById('image_url').value.trim(),
+        amazon_url: document.getElementById('amazon_url').value.trim(),
+        ig_permalink: document.getElementById('ig_permalink').value.trim(),
+    };
+
+    try {
+        const resp = await fetch(API_BASE + '/api/admin/posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-admin-secret': ADMIN_SECRET },
+            body: JSON.stringify(data),
+        });
+        const result = await resp.json();
+        if (resp.ok) {
+            showAlert('Reseña publicada: ' + data.book_title, 'success');
+            document.getElementById('form-resena').reset();
+            currentRating = 0;
+            document.querySelectorAll('#stars-input span').forEach(s => s.classList.remove('active'));
+        } else {
+            showAlert('Error: ' + (result.detail || 'Algo salió mal'), 'error');
+        }
+    } catch (err) {
+        showAlert('Error de conexión: ' + err.message, 'error');
+    }
+    btn.disabled = false;
+    btn.textContent = 'Publicar Reseña';
+}
+
+async function loadPosts() {
+    const list = document.getElementById('post-list');
+    try {
+        const resp = await fetch(API_BASE + '/api/admin/posts-list', {
+            headers: { 'x-admin-secret': ADMIN_SECRET },
+        });
+        const data = await resp.json();
+        if (!data.posts || data.posts.length === 0) {
+            list.innerHTML = '<li style="text-align:center;color:#8a7a6a;padding:2rem;">No hay reseñas aún</li>';
+            return;
+        }
+        list.innerHTML = data.posts.map(p => `
+            <li class="post-item">
+                ${p.image_url ? '<img src="' + p.image_url + '" alt="">' : ''}
+                <div class="post-item-info">
+                    <div class="post-item-title">${p.title}</div>
+                    <div class="post-item-meta">${p.genre || ''} · ${'★'.repeat(p.rating || 0)} · ${p.published ? 'Publicado' : 'Borrador'}</div>
+                </div>
+                <div class="post-item-actions">
+                    <button class="btn-small" onclick="togglePost(${p.id})">${p.published ? 'Ocultar' : 'Publicar'}</button>
+                    <button class="btn-small btn-danger" onclick="deletePost(${p.id})">Borrar</button>
+                </div>
+            </li>
+        `).join('');
+    } catch (err) {
+        list.innerHTML = '<li style="text-align:center;color:#dc3545;padding:2rem;">Error: ' + err.message + '</li>';
+    }
+}
+
+async function togglePost(id) {
+    await fetch(API_BASE + '/api/posts/' + id + '/toggle', {
+        method: 'POST',
+        headers: { 'x-admin-secret': ADMIN_SECRET },
+    });
+    loadPosts();
+}
+
+async function deletePost(id) {
+    if (!confirm('¿Segura que quieres borrar esta reseña?')) return;
+    await fetch(API_BASE + '/api/admin/posts/' + id, {
+        method: 'DELETE',
+        headers: { 'x-admin-secret': ADMIN_SECRET },
+    });
+    loadPosts();
+}
+
+async function handleIGImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const progress = document.getElementById('import-progress');
+    const status = document.getElementById('import-status');
+    progress.classList.remove('hidden');
+    status.textContent = 'Leyendo archivo...';
+
+    try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+
+        status.textContent = 'Enviando al servidor...';
+        const resp = await fetch(API_BASE + '/api/admin/import-instagram', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-admin-secret': ADMIN_SECRET },
+            body: JSON.stringify(data),
+        });
+        const result = await resp.json();
+        if (resp.ok) {
+            showAlert('Importación exitosa: ' + result.imported + ' reseñas importadas, ' + result.skipped + ' omitidas', 'success');
+        } else {
+            showAlert('Error: ' + (result.detail || 'Algo salió mal'), 'error');
+        }
+    } catch (err) {
+        showAlert('Error procesando archivo: ' + err.message, 'error');
+    }
+    progress.classList.add('hidden');
+}
+</script>
+{% endblock %}

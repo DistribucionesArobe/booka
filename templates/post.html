@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block og_type %}article{% endblock %}
+
+{% block schema_extra %}
+<!-- Review structured data -->
+<script type="application/ld+json">{{ schema_json | safe }}</script>
+
+<!-- Breadcrumb structured data -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Inicio",
+            "item": "{{ site_url }}"
+        },
+        {% if post.genre %}
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "{{ post.genre }}",
+            "item": "{{ site_url }}/genero/{{ post.genre }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "{{ post.title }}"
+        }
+        {% else %}
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "{{ post.title }}"
+        }
+        {% endif %}
+    ]
+}
+</script>
+
+<!-- Article structured data for Google Discover -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ post.title }}",
+    "description": "{{ post.excerpt }}",
+    "author": {
+        "@type": "Person",
+        "name": "Bookaholic Mexicana",
+        "url": "{{ site_url }}/sobre-mi"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Bookaholic Mexicana",
+        "url": "{{ site_url }}"
+    },
+    "datePublished": "{{ post.ig_timestamp or post.created_at }}",
+    "dateModified": "{{ post.created_at }}",
+    {% if post.image_url %}"image": "{{ post.image_url }}",{% endif %}
+    "mainEntityOfPage": "{{ site_url }}/resena/{{ post.slug }}",
+    "articleSection": "{{ post.genre or 'Reseñas de libros' }}",
+    "inLanguage": "es-MX"
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<article class="post-single" itemscope itemtype="https://schema.org/Review">
+    <nav class="breadcrumbs">
+        <a href="/">Inicio</a>
+        {% if post.genre %} &rsaquo; <a href="/genero/{{ post.genre }}">{{ post.genre }}</a>{% endif %}
+        &rsaquo; <strong>{{ post.book_title or post.title }}</strong>
+    </nav>
+
+    <h1 itemprop="name">{{ post.title }}</h1>
+
+    <div class="meta">
+        <time datetime="{{ post.ig_timestamp or post.created_at }}" itemprop="datePublished">
+            {{ post.ig_timestamp or post.created_at }}
+        </time>
+        {% if post.genre %}
+        &middot; <a href="/genero/{{ post.genre }}" class="genre-tag">{{ post.genre }}</a>
+        {% endif %}
+        {% if post.rating %}
+        &middot; <span class="stars" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+            <meta itemprop="ratingValue" content="{{ post.rating }}">
+            <meta itemprop="bestRating" content="5">
+            {% for i in range(post.rating) %}&starf;{% endfor %}{% for i in range(5 - post.rating) %}&star;{% endfor %}
+        </span>
+        {% endif %}
+        &middot; por <span itemprop="author">Bookaholic Mexicana</span>
+    </div>
+
+    {% if post.image_url %}
+    <img class="featured-img"
+         src="{{ post.image_url }}"
+         alt="Rese&ntilde;a de {{ post.book_title or post.title }}{% if post.book_author %} de {{ post.book_author }}{% endif %} - Bookaholic Mexicana"
+         itemprop="image">
+    {% endif %}
+
+    {% if post.book_title %}
+    <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.5rem; margin-bottom: 2rem; font-family: var(--font-sans); font-size: 0.9rem;"
+         itemprop="itemReviewed" itemscope itemtype="https://schema.org/Book">
+        {% if post.book_title %}<strong>Libro:</strong> <span itemprop="name">{{ post.book_title }}</span><br>{% endif %}
+        {% if post.book_author %}<strong>Autor:</strong> <span itemprop="author">{{ post.book_author }}</span><br>{% endif %}
+        {% if post.genre %}<strong>G&eacute;nero:</strong> <span itemprop="genre">{{ post.genre }}</span><br>{% endif %}
+        {% if post.rating %}<strong>Mi calificaci&oacute;n:</strong> <span class="stars">{% for i in range(post.rating) %}&starf;{% endfor %}</span> {{ post.rating }}/5{% endif %}
+    </div>
+    {% endif %}
+
+    <div class="post-body" itemprop="reviewBody">
+        {{ post.body | safe }}
+    </div>
+
+    {% if post.amazon_url %}
+    <div style="text-align: center; margin: 2rem 0;">
+        <a href="{{ post.amazon_url }}" target="_blank" rel="noopener sponsored nofollow" class="amazon-cta">
+            Comprar en Amazon
+        </a>
+        <p style="font-size: 0.75rem; color: var(--muted); margin-top: 0.5rem;">
+            Enlace de afiliado &mdash; sin costo extra para ti
+        </p>
+    </div>
+    {% endif %}
+
+    {% if post.ig_permalink %}
+    <p class="ig-link" style="margin-top: 2rem;">
+        Ver esta rese&ntilde;a en <a href="{{ post.ig_permalink }}" target="_blank" rel="noopener">Instagram</a>
+    </p>
+    {% endif %}
+
+    <!-- Newsletter CTA in post -->
+    <div class="newsletter-bar" style="margin-top: 2rem;">
+        <h3>&iquest;Te gust&oacute; esta rese&ntilde;a?</h3>
+        <p>Recibe m&aacute;s recomendaciones de libros directo en tu email. Sin spam.</p>
+        <a href="https://bookaholicmexicana.substack.com" target="_blank" rel="noopener" class="btn-newsletter">
+            Suscribirme al newsletter
+        </a>
+    </div>
+
+    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border); text-align: center;">
+        <a href="/">&larr; Volver a todas las rese&ntilde;as de libros</a>
+        {% if post.genre %}
+        &middot; <a href="/genero/{{ post.genre }}">M&aacute;s libros de {{ post.genre }}</a>
+        {% endif %}
+    </div>
+</article>
+{% endblock %}

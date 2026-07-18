@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block schema_extra %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "mainEntity": {
+        "@type": "Person",
+        "name": "Bookaholic Mexicana",
+        "alternateName": "Beatriz",
+        "description": "Creadora de contenido literario, bookstagrammer y reseñadora de libros en español. Esposa, mamá, abogada, lectora y norteña.",
+        "url": "{{ site_url }}/sobre-mi",
+        "sameAs": [
+            "https://www.instagram.com/bookaholicmexicana/",
+            "https://www.goodreads.com/user/show/168893635",
+            "https://www.amazon.com.mx/shop/bookaholicmexicana",
+            "https://bookaholicmexicana.substack.com",
+            "https://www.pinterest.com/bookaholicmexicana/",
+            "https://fable.co/fabler/bookaholic-mexicana-244062493156"
+        ],
+        "jobTitle": "Book Reviewer / Content Creator",
+        "knowsAbout": ["Libros", "Reseñas literarias", "Ficción contemporánea", "Romance", "Fantasía", "Thriller", "Young Adult", "Bookstagram"]
+    }
+}
+</script>
+{% endblock %}
+
+{% block head_extra %}
+<style>
+    .about-intro {
+        background: linear-gradient(135deg, var(--rose-pale) 0%, var(--accent-pale) 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        border: 1px solid var(--border-soft);
+    }
+    .about-intro h1 {
+        font-family: var(--font-serif);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    .about-intro .subtitle {
+        font-family: var(--font-serif);
+        font-style: italic;
+        color: var(--accent);
+        font-size: 1rem;
+        margin-bottom: 1.2rem;
+    }
+    .about-intro p {
+        font-family: var(--font-sans);
+        font-size: 0.92rem;
+        line-height: 1.7;
+        color: var(--text-soft);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .social-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0 2rem;
+    }
+    .social-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 1rem 1.2rem;
+        background: var(--cream);
+        border: 1px solid var(--border-soft);
+        border-radius: 14px;
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        text-decoration: none;
+        color: var(--text);
+    }
+    .social-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(180, 120, 100, 0.1);
+        border-color: var(--accent-light);
+        text-decoration: none;
+    }
+    .social-item .social-emoji { font-size: 1.4rem; flex-shrink: 0; }
+    .social-item .social-info { }
+    .social-item .social-name {
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--accent);
+    }
+    .social-item .social-desc {
+        font-family: var(--font-sans);
+        font-size: 0.78rem;
+        color: var(--muted);
+    }
+    .genres-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+    .genres-cloud span {
+        background: var(--accent-pale);
+        color: var(--accent);
+        font-family: var(--font-sans);
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 0.3rem 0.9rem;
+        border-radius: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <nav class="breadcrumbs">
+        <a href="/">Inicio</a> &rsaquo; <strong>Sobre m&iacute;</strong>
+    </nav>
+
+    <div class="about-intro">
+        <h1>Hola, soy Beatriz</h1>
+        <p class="subtitle">Esposa, mam&aacute;, abogada, lectora y norte&ntilde;a</p>
+        <p>
+            Bienvenida a <strong>Bookaholic Mexicana</strong>, mi rinc&oacute;n literario
+            donde comparto rese&ntilde;as honestas de libros, recomendaciones
+            y mi pasi&oacute;n por la lectura con una comunidad de m&aacute;s de
+            <strong>11,000 lectores</strong>.
+        </p>
+    </div>
+
+    <p>
+        Lo que empez&oacute; como un hobby en Instagram se convirti&oacute; en una
+        comunidad hermosa de amantes de los libros. Ahora este sitio es el complemento perfecto:
+        aqu&iacute; cada <strong>rese&ntilde;a de libro</strong> tiene su espacio permanente, con m&aacute;s
+        detalle del que cabe en un caption. Si te preguntas <em>&ldquo;&iquest;qu&eacute; libro leo?&rdquo;</em>
+        o buscas <strong>recomendaciones de libros</strong>, est&aacute;s en el lugar correcto.
+    </p>
+
+    <h2>G&eacute;neros que rese&ntilde;o</h2>
+    <p>Leo de todo y escribo rese&ntilde;as de cada g&eacute;nero, siempre honestas y sin spoilers:</p>
+    <div class="genres-cloud">
+        <span>Romance</span>
+        <span>Fantas&iacute;a</span>
+        <span>Thriller</span>
+        <span>Cl&aacute;sicos</span>
+        <span>Young Adult</span>
+        <span>Novela contempor&aacute;nea</span>
+        <span>Ficci&oacute;n literaria</span>
+        <span>Misterio</span>
+        <span>Ciencia ficci&oacute;n</span>
+        <span>Terror</span>
+        <span>No ficci&oacute;n</span>
+        <span>Poes&iacute;a</span>
+    </div>
+
+    <h2>&iquest;D&oacute;nde m&aacute;s encontrarme?</h2>
+    <p>Comparto contenido literario en varias plataformas:</p>
+
+    <div class="social-grid">
+        <a href="https://instagram.com/{{ ig_handle }}" target="_blank" rel="noopener" class="social-item">
+            <span class="social-emoji">&#x1F4F8;</span>
+            <div class="social-info">
+                <div class="social-name">Instagram</div>
+                <div class="social-desc">@bookaholicmexicana &middot; +11K seguidores</div>
+            </div>
+        </a>
+        <a href="https://www.goodreads.com/user/show/168893635" target="_blank" rel="noopener" class="social-item">
+            <span class="social-emoji">&#x2B50;</span>
+            <div class="social-info">
+                <div class="social-name">Goodreads</div>
+                <div class="social-desc">Mis lecturas y ratings</div>
+            </div>
+        </a>
+        <a href="https://www.amazon.com.mx/shop/bookaholicmexicana" target="_blank" rel="noopener" class="social-item">
+            <span class="social-emoji">&#x1F6D2;</span>
+            <div class="social-info">
+                <div class="social-name">Amazon Storefront</div>
+                <div class="social-desc">Mis libros recomendados</div>
+            </div>
+        </a>
+        <a href="https://bookaholicmexicana.substack.com" target="_blank" rel="noopener" class="social-item">
+            <span class="social-emoji">&#x2709;</span>
+            <div class="social-info">
+                <div class="social-name">Substack</div>
+                <div class="social-desc">Rese&ntilde;as en tu email</div>
+            </div>
+        </a>
+        <a href="https://www.pinterest.com/bookaholicmexicana/" target="_blank" rel="noopener" class="social-item">
+            <span class="social-emoji">&#x1F4CC;</span>
+            <div class="social-info">
+                <div class="social-name">Pinterest</div>
+                <div class="social-desc">Aesthetic bookish</div>
+            </div>
+        </a>
+        <a href="https://fable.co/fabler/bookaholic-mexicana-244062493156" target="_blank" rel="noopener" class="social-item">
+            <span class="social-emoji">&#x1F4DA;</span>
+            <div class="social-info">
+                <div class="social-name">Fable</div>
+                <div class="social-desc">Club de lectura y listas</div>
+            </div>
+        </a>
+    </div>
+
+    <h2>Cuando no estoy leyendo</h2>
+    <p>
+        Me encuentras en mis clases de pilates, en la oficina (s&iacute;, tambi&eacute;n
+        soy abogada), o disfrutando tiempo con mi familia.
+    </p>
+
+    <h2>Colaboraciones con editoriales y autores</h2>
+    <p>
+        &iquest;Eres editorial, autor o marca relacionada con libros?
+        Me encanta descubrir nuevos t&iacute;tulos y compartirlos con mi comunidad.
+        Visita mi p&aacute;gina de <a href="/colaboraciones">colaboraciones</a> o escr&iacute;beme
+        a <a href="mailto:bookaholicmexicana@gmail.com">bookaholicmexicana@gmail.com</a>.
+    </p>
+
+    <p style="margin-top: 2rem; font-size: 0.85rem; color: var(--muted); font-family: var(--font-sans);">
+        <em>Algunos enlaces en este sitio son de afiliado de Amazon.
+        Si compras a trav&eacute;s de ellos, recibo una peque&ntilde;a comisi&oacute;n
+        sin costo extra para ti. &iexcl;Gracias por apoyar!</em>
+    </p>
+</div>
+{% endblock %}

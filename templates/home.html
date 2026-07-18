@@ -1,0 +1,551 @@
+{% extends "base.html" %}
+
+{% block schema_extra %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "{{ meta_title or 'Reseñas de Libros — Bookaholic Mexicana' }}",
+    "description": "{{ meta_description }}",
+    "url": "{{ site_url }}{% if current_genre %}/genero/{{ current_genre }}{% endif %}",
+    "isPartOf": {
+        "@type": "WebSite",
+        "name": "{{ site_name }}",
+        "url": "{{ site_url }}"
+    }
+}
+</script>
+{% if posts and not current_genre %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Reseñas de libros recientes",
+    "numberOfItems": {{ posts|length }},
+    "itemListElement": [
+        {% for post in posts %}
+        {
+            "@type": "ListItem",
+            "position": {{ loop.index }},
+            "url": "{{ site_url }}/resena/{{ post.slug }}",
+            "name": "{{ post.title }}"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]
+}
+</script>
+{% endif %}
+{% endblock %}
+
+{% block head_extra %}
+<style>
+    /* ── Hero Section — aesthetic girly ───────── */
+    .hero {
+        background: linear-gradient(135deg, var(--rose-pale) 0%, var(--accent-pale) 50%, var(--cream) 100%);
+        border-radius: 24px;
+        padding: 3rem 2.5rem;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border-soft);
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -60px; right: -60px;
+        width: 200px; height: 200px;
+        background: radial-gradient(circle, var(--blush) 0%, transparent 70%);
+        opacity: 0.4;
+    }
+    .hero::after {
+        content: '';
+        position: absolute;
+        bottom: -40px; left: -40px;
+        width: 160px; height: 160px;
+        background: radial-gradient(circle, var(--sage-light) 0%, transparent 70%);
+        opacity: 0.3;
+    }
+    .hero-content {
+        position: relative; z-index: 1;
+    }
+    .hero-logo-big {
+        width: 80px; height: 80px;
+        margin: 0 auto 1.2rem;
+    }
+    .hero-greeting {
+        font-family: var(--font-serif);
+        font-size: 1rem;
+        font-style: italic;
+        color: var(--accent);
+        margin-bottom: 0.3rem;
+        letter-spacing: 0.05em;
+    }
+    .hero h1 {
+        font-family: var(--font-serif);
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.25;
+        margin-bottom: 0.8rem;
+    }
+    .hero-desc {
+        font-family: var(--font-sans);
+        font-size: 0.92rem;
+        color: var(--text-soft);
+        line-height: 1.65;
+        max-width: 520px;
+        margin: 0 auto 1.5rem;
+        font-weight: 400;
+    }
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    .hero-stat {
+        text-align: center;
+    }
+    .hero-stat strong {
+        display: block;
+        font-family: var(--font-serif);
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--accent);
+    }
+    .hero-stat span {
+        font-family: var(--font-sans);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        font-weight: 600;
+    }
+    .hero-cta {
+        display: inline-block;
+        background: var(--accent);
+        color: white;
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 0.88rem;
+        padding: 0.7rem 2rem;
+        border-radius: 30px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        letter-spacing: 0.02em;
+    }
+    .hero-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(201, 123, 93, 0.3);
+        text-decoration: none;
+        color: white;
+    }
+    .hero-divider {
+        margin: 1.5rem auto 0;
+        color: var(--accent-light);
+        font-size: 0.9rem;
+        letter-spacing: 0.4rem;
+    }
+
+    /* ── Platforms — aesthetic cards ──────────── */
+    .platforms-section {
+        margin-bottom: 2.5rem;
+    }
+    .platforms-title {
+        font-family: var(--font-serif);
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-align: center;
+        margin-bottom: 1.2rem;
+        letter-spacing: 0.03em;
+    }
+    .platforms {
+        display: flex;
+        gap: 0.9rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .platforms::-webkit-scrollbar { display: none; }
+    .platform-card {
+        flex: 0 0 auto;
+        width: 140px;
+        background: var(--card-bg);
+        border: 1px solid var(--border-soft);
+        border-radius: 16px;
+        padding: 1.2rem 0.8rem;
+        text-align: center;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s;
+        text-decoration: none;
+        color: var(--text);
+    }
+    .platform-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(180, 120, 100, 0.1);
+        border-color: var(--accent-light);
+        text-decoration: none;
+    }
+    .platform-emoji {
+        font-size: 1.6rem;
+        margin-bottom: 0.4rem;
+        display: block;
+    }
+    .platform-name {
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 0.78rem;
+        color: var(--accent);
+        margin-bottom: 0.15rem;
+    }
+    .platform-desc {
+        font-family: var(--font-sans);
+        font-size: 0.68rem;
+        color: var(--muted);
+        font-weight: 400;
+    }
+
+    /* ── Section headers ─────────────────────── */
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
+    }
+    .section-header h2 {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+    .section-header::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border-soft);
+    }
+
+    /* ── Currently reading ───────────────────── */
+    .reading-now {
+        background: var(--cream);
+        border: 1px solid var(--border-soft);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        margin-bottom: 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .reading-now-icon {
+        font-size: 1.8rem;
+        flex-shrink: 0;
+    }
+    .reading-now-text {
+        font-family: var(--font-sans);
+        font-size: 0.88rem;
+        color: var(--text-soft);
+    }
+    .reading-now-text strong {
+        color: var(--text);
+    }
+
+    /* ── Empty state ─────────────────────────── */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+    }
+    .empty-emoji {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+    }
+    .empty-state h2 {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        color: var(--text);
+        margin-bottom: 0.8rem;
+    }
+    .empty-state p {
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        color: var(--muted);
+        max-width: 480px;
+        margin: 0 auto 1.5rem;
+        line-height: 1.6;
+    }
+    .empty-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+    }
+    .empty-btn {
+        padding: 0.6rem 1.5rem;
+        border-radius: 30px;
+        font-family: var(--font-sans);
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: transform 0.2s, box-shadow 0.2s;
+        color: white;
+    }
+    .empty-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        text-decoration: none;
+        color: white;
+    }
+
+    /* ── SEO bottom section ──────────────────── */
+    .seo-about {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-soft);
+    }
+    .seo-about h2 {
+        font-family: var(--font-serif);
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--accent);
+        margin-bottom: 0.8rem;
+    }
+    .seo-about p {
+        font-family: var(--font-sans);
+        color: var(--muted);
+        font-size: 0.85rem;
+        line-height: 1.7;
+        max-width: 700px;
+        font-weight: 400;
+    }
+
+    @media (max-width: 600px) {
+        .hero { padding: 2rem 1.5rem; border-radius: 18px; }
+        .hero h1 { font-size: 1.6rem; }
+        .hero-stats { gap: 1.2rem; }
+        .hero-stat strong { font-size: 1.3rem; }
+        .platforms { justify-content: flex-start; flex-wrap: nowrap; }
+        .platform-card { width: 125px; }
+        .reading-now { flex-direction: column; text-align: center; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    {% if not current_genre and page == 1 %}
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-logo-big">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="100" height="100" rx="18" fill="var(--accent)"/>
+                    <rect x="12" y="8" width="76" height="68" rx="10" fill="none" stroke="white" stroke-width="2.5"/>
+                    <polygon points="35,76 45,76 38,90" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+                    <text x="50" y="58" text-anchor="middle" font-family="'Cormorant Garamond',Georgia,serif" font-size="46" font-weight="bold" fill="white">B.</text>
+                </svg>
+            </div>
+            <p class="hero-greeting">Bienvenida a mi rinc&oacute;n literario</p>
+            <h1>Rese&ntilde;as de Libros<br>&amp; Recomendaciones Literarias</h1>
+            <p class="hero-desc">
+                Descubre tu pr&oacute;xima lectura favorita con rese&ntilde;as honestas de
+                romance, ficci&oacute;n contempor&aacute;nea, fantas&iacute;a, thriller y mucho m&aacute;s.
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <strong>11K+</strong>
+                    <span>Lectores</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>144+</strong>
+                    <span>Rese&ntilde;as</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>6</strong>
+                    <span>Plataformas</span>
+                </div>
+            </div>
+            <a href="https://instagram.com/{{ ig_handle }}" target="_blank" rel="noopener" class="hero-cta">
+                S&iacute;gueme en Instagram
+            </a>
+            <div class="hero-divider">&bull; &bull; &bull;</div>
+        </div>
+    </div>
+
+    <!-- Currently reading -->
+    <div class="reading-now">
+        <span class="reading-now-icon">&#x1F4D6;</span>
+        <div class="reading-now-text">
+            <strong>Leyendo ahora:</strong> Esposa, mam&aacute;, abogada, lectora y norte&ntilde;a. Meta 2025: 20 libros.
+            Sigue mi progreso en
+            <a href="https://www.goodreads.com/user/show/168893635" target="_blank" rel="noopener">Goodreads</a>.
+        </div>
+    </div>
+
+    <!-- Platforms -->
+    <div class="platforms-section">
+        <p class="platforms-title">Tambi&eacute;n me encuentras en</p>
+        <div class="platforms">
+            <a href="https://instagram.com/{{ ig_handle }}" target="_blank" rel="noopener" class="platform-card">
+                <span class="platform-emoji">&#x1F4F8;</span>
+                <div class="platform-name">Instagram</div>
+                <div class="platform-desc">@bookaholicmexicana</div>
+            </a>
+            <a href="https://bookaholicmexicana.substack.com" target="_blank" rel="noopener" class="platform-card">
+                <span class="platform-emoji">&#x2709;</span>
+                <div class="platform-name">Substack</div>
+                <div class="platform-desc">Newsletter literario</div>
+            </a>
+            <a href="https://www.goodreads.com/user/show/168893635" target="_blank" rel="noopener" class="platform-card">
+                <span class="platform-emoji">&#x2B50;</span>
+                <div class="platform-name">Goodreads</div>
+                <div class="platform-desc">Ratings y lecturas</div>
+            </a>
+            <a href="https://www.pinterest.com/bookaholicmexicana/" target="_blank" rel="noopener" class="platform-card">
+                <span class="platform-emoji">&#x1F4CC;</span>
+                <div class="platform-name">Pinterest</div>
+                <div class="platform-desc">Aesthetic bookish</div>
+            </a>
+            <a href="https://fable.co/fabler/bookaholic-mexicana-244062493156" target="_blank" rel="noopener" class="platform-card">
+                <span class="platform-emoji">&#x1F4DA;</span>
+                <div class="platform-name">Fable</div>
+                <div class="platform-desc">Club de lectura</div>
+            </a>
+            <a href="https://www.amazon.com.mx/shop/bookaholicmexicana" target="_blank" rel="noopener" class="platform-card">
+                <span class="platform-emoji">&#x1F6D2;</span>
+                <div class="platform-name">Amazon</div>
+                <div class="platform-desc">Mis recomendados</div>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if current_genre %}
+    <div style="margin-bottom: 1.5rem;">
+        <nav class="breadcrumbs">
+            <a href="/">Inicio</a> &rsaquo; <strong>{{ current_genre }}</strong>
+        </nav>
+        <h1 style="font-family: var(--font-serif); font-size: 1.8rem; font-weight: 700;">Libros de {{ current_genre }}</h1>
+        <p style="color: var(--muted); font-family: var(--font-sans); font-size: 0.88rem; margin-top: 0.3rem;">
+            Las mejores rese&ntilde;as de libros de {{ current_genre }}. Encuentra tu pr&oacute;xima novela de {{ current_genre|lower }}.
+        </p>
+    </div>
+    {% endif %}
+
+    {% if genres %}
+    <div class="genres-bar" role="navigation" aria-label="Filtrar por g&eacute;nero literario">
+        <a href="/" {% if not current_genre %}class="active"{% endif %}>Todas</a>
+        {% for g in genres %}
+        <a href="/genero/{{ g.name }}" {% if current_genre == g.name %}class="active"{% endif %}
+           title="Rese&ntilde;as de libros de {{ g.name }}">
+            {{ g.name }} ({{ g.count }})
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if posts %}
+    <div class="section-header">
+        <h2>{% if current_genre %}Rese&ntilde;as de {{ current_genre }}{% else %}Rese&ntilde;as recientes{% endif %}</h2>
+    </div>
+
+    <div class="posts-grid">
+        {% for post in posts %}
+        <article class="post-card" itemscope itemtype="https://schema.org/Review">
+            {% if post.image_url %}
+            <a href="/resena/{{ post.slug }}">
+                <img src="{{ post.image_url }}"
+                     alt="Rese&ntilde;a de {{ post.book_title or post.title }}"
+                     loading="lazy"
+                     itemprop="image">
+            </a>
+            {% endif %}
+            <div class="post-card-body">
+                <div class="post-card-meta">
+                    <time itemprop="datePublished">{{ post.created_at }}</time>
+                    {% if post.genre %}
+                    &middot; <a href="/genero/{{ post.genre }}" class="genre-tag">{{ post.genre }}</a>
+                    {% endif %}
+                    {% if post.rating %}
+                    &middot; <span class="stars" aria-label="{{ post.rating }} de 5 estrellas">{% for i in range(post.rating) %}&starf;{% endfor %}</span>
+                    {% endif %}
+                </div>
+                <h2 class="post-card-title">
+                    <a href="/resena/{{ post.slug }}" itemprop="url">
+                        <span itemprop="name">{{ post.title }}</span>
+                    </a>
+                </h2>
+                {% if post.book_author %}
+                <p style="font-family: var(--font-sans); font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem; font-style: italic;" itemprop="author">
+                    {{ post.book_author }}
+                </p>
+                {% endif %}
+                <p class="post-card-excerpt" itemprop="description">{{ post.excerpt }}</p>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+
+    {% if total_pages > 1 %}
+    <nav class="pagination" aria-label="Paginaci&oacute;n de rese&ntilde;as">
+        {% if page > 1 %}
+        <a href="?page={{ page - 1 }}" rel="prev">&larr; Anterior</a>
+        {% endif %}
+        {% for p in range(1, total_pages + 1) %}
+            {% if p == page %}
+            <span class="current" aria-current="page">{{ p }}</span>
+            {% elif p <= 3 or p >= total_pages - 1 or (p >= page - 1 and p <= page + 1) %}
+            <a href="?page={{ p }}">{{ p }}</a>
+            {% elif p == 4 or p == total_pages - 2 %}
+            <span>&hellip;</span>
+            {% endif %}
+        {% endfor %}
+        {% if page < total_pages %}
+        <a href="?page={{ page + 1 }}" rel="next">Siguiente &rarr;</a>
+        {% endif %}
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty state — aesthetic -->
+    <div class="empty-state">
+        <div class="empty-emoji">&#x1F338;&#x1F4DA;&#x2728;</div>
+        <h2>Pr&oacute;ximamente: rese&ntilde;as de libros</h2>
+        <p>
+            Estamos preparando rese&ntilde;as completas para ti.
+            Mientras tanto, encuentra m&aacute;s de 144 rese&ntilde;as en nuestras redes:
+        </p>
+        <div class="empty-buttons">
+            <a href="https://instagram.com/{{ ig_handle }}" target="_blank" rel="noopener"
+               class="empty-btn" style="background: var(--accent); color: white;">
+                Instagram
+            </a>
+            <a href="https://bookaholicmexicana.substack.com" target="_blank" rel="noopener"
+               class="empty-btn" style="background: var(--rose); color: white;">
+                Substack
+            </a>
+            <a href="https://www.goodreads.com/user/show/168893635" target="_blank" rel="noopener"
+               class="empty-btn" style="background: var(--sage); color: white;">
+                Goodreads
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- SEO content section -->
+    {% if not current_genre and page == 1 %}
+    <section class="seo-about">
+        <h2>Sobre Bookaholic Mexicana</h2>
+        <p>
+            Bookaholic Mexicana es un blog de rese&ntilde;as de libros en espa&ntilde;ol.
+            Aqu&iacute; encontrar&aacute;s rese&ntilde;as honestas de novelas contempor&aacute;neas,
+            ficci&oacute;n literaria, romance, fantas&iacute;a, thriller, young adult, cl&aacute;sicos y m&aacute;s.
+            Si te preguntas &ldquo;qu&eacute; libro leo&rdquo;, &ldquo;qu&eacute; libro me recomiendan&rdquo;
+            o buscas las mejores recomendaciones de libros, est&aacute;s en el lugar correcto.
+            Tambi&eacute;n puedes encontrarnos en <a href="https://instagram.com/{{ ig_handle }}" target="_blank" rel="noopener">Instagram</a>,
+            <a href="https://www.goodreads.com/user/show/168893635" target="_blank" rel="noopener">Goodreads</a>,
+            <a href="https://bookaholicmexicana.substack.com" target="_blank" rel="noopener">Substack</a> y
+            <a href="https://fable.co/fabler/bookaholic-mexicana-244062493156" target="_blank" rel="noopener">Fable</a>.
+        </p>
+    </section>
+    {% endif %}
+{% endblock %}

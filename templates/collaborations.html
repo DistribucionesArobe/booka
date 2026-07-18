@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+<style>
+    .collab-hero {
+        background: linear-gradient(135deg, var(--accent-pale) 0%, var(--rose-pale) 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        border: 1px solid var(--border-soft);
+    }
+    .collab-hero h1 {
+        font-family: var(--font-serif);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    .collab-hero p {
+        font-family: var(--font-sans);
+        font-size: 0.92rem;
+        color: var(--text-soft);
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    .service-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.2rem;
+        margin: 1.5rem 0 2rem;
+    }
+    .service-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-soft);
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .service-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(180, 120, 100, 0.1);
+    }
+    .service-card h3 {
+        font-family: var(--font-serif);
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+    }
+    .service-card p {
+        font-family: var(--font-sans);
+        font-size: 0.85rem;
+        color: var(--text-soft);
+        line-height: 1.6;
+    }
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0 2rem;
+    }
+    .stat-item {
+        background: var(--cream);
+        border: 1px solid var(--border-soft);
+        border-radius: 14px;
+        padding: 1.2rem;
+        text-align: center;
+    }
+    .stat-item strong {
+        display: block;
+        font-family: var(--font-serif);
+        font-size: 1.3rem;
+        color: var(--accent);
+        margin-bottom: 0.2rem;
+    }
+    .stat-item span {
+        font-family: var(--font-sans);
+        font-size: 0.82rem;
+        color: var(--muted);
+    }
+    .collab-cta {
+        background: linear-gradient(135deg, var(--rose) 0%, var(--accent) 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin: 2rem 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .collab-cta::before {
+        content: '';
+        position: absolute;
+        top: -30px; right: -30px;
+        width: 120px; height: 120px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 50%;
+    }
+    .collab-cta h2 {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+        color: white;
+        position: relative;
+    }
+    .collab-cta a {
+        color: white;
+        text-decoration: underline;
+        font-family: var(--font-sans);
+        position: relative;
+    }
+    .collab-cta p {
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        position: relative;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <nav class="breadcrumbs">
+        <a href="/">Inicio</a> &rsaquo; <strong>Colaboraciones</strong>
+    </nav>
+
+    <div class="collab-hero">
+        <h1>Colaboraciones</h1>
+        <p>
+            &iquest;Eres editorial, autor independiente o marca relacionada con libros?
+            Me encanta trabajar con quienes comparten la pasi&oacute;n por la lectura.
+        </p>
+    </div>
+
+    <h2>Lo que ofrezco</h2>
+
+    <div class="service-cards">
+        <div class="service-card">
+            <h3>&#x1F4F8; Rese&ntilde;a en Instagram + Blog</h3>
+            <p>
+                Tu libro rese&ntilde;ado en mi cuenta de Instagram (+11K seguidores org&aacute;nicos)
+                y publicado permanentemente en este sitio web, indexado en Google.
+                Incluye stories, post en feed y art&iacute;culo completo con SEO.
+            </p>
+        </div>
+        <div class="service-card">
+            <h3>&#x1F381; Unboxing y Stories</h3>
+            <p>
+                Contenido visual del libro llegando, primeras impresiones,
+                fotos est&eacute;ticas del libro. Ideal para generar expectativa.
+            </p>
+        </div>
+        <div class="service-card">
+            <h3>&#x2728; Paquetes personalizados</h3>
+            <p>
+                Combinaciones de rese&ntilde;a + stories + menciones + sorteos
+                seg&uacute;n tus objetivos. Armamos algo a tu medida.
+            </p>
+        </div>
+    </div>
+
+    <h2>Mi audiencia</h2>
+
+    <div class="stats-row">
+        <div class="stat-item">
+            <strong>+11,000</strong>
+            <span>Seguidores org&aacute;nicos en IG</span>
+        </div>
+        <div class="stat-item">
+            <strong>Mujeres 18-35</strong>
+            <span>Lectoras mexicanas y latinas</span>
+        </div>
+        <div class="stat-item">
+            <strong>Engagement real</strong>
+            <span>Comunidad activa que comparte</span>
+        </div>
+        <div class="stat-item">
+            <strong>SEO permanente</strong>
+            <span>Rese&ntilde;as indexadas en Google</span>
+        </div>
+    </div>
+
+    <h2>&iquest;Por qu&eacute; colaborar conmigo?</h2>
+
+    <p>
+        A diferencia de un post ef&iacute;mero en Instagram, las rese&ntilde;as en este sitio
+        son permanentes y aparecen en Google. Cuando alguien busca
+        &ldquo;rese&ntilde;a de [tu libro]&rdquo;, mi art&iacute;culo aparece.
+        Eso significa visibilidad continua, no solo las primeras 48 horas.
+    </p>
+
+    <div class="collab-cta">
+        <h2>&iquest;Quieres colaborar?</h2>
+        <p style="margin-bottom: 0.5rem;">
+            <a href="mailto:bookaholicmexicana@gmail.com">
+                bookaholicmexicana@gmail.com
+            </a>
+        </p>
+        <p style="font-size: 0.85rem; opacity: 0.9;">
+            o por DM en
+            <a href="https://instagram.com/{{ ig_handle }}" target="_blank" rel="noopener">
+                @{{ ig_handle }}
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}
